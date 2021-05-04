@@ -3,4 +3,5 @@ module.exports = {
   dbName: "stolle",
   dbUser: "admin",
   dbUserPassword: "stolle666",
+  jwtCode: "stolle654",
 };

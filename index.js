@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cfg = require("./config.js");
 const morgan = require("morgan");
 const cors = require("cors");
-const usersController = require("./controllers/users");
+const authController = require("./controllers/auth");
 
 const uri = `mongodb+srv://${cfg.dbUser}:${cfg.dbUserPassword}@stolle.3qrhz.mongodb.net/${cfg.dbName}?retryWrites=true&w=majority`;
 
@@ -19,7 +19,8 @@ mongoose
 app.use(morgan("dev"));
 app.use(cors());
 
-app.route("/register").post(usersController.addUser);
+app.route("/register").post(authController.register);
+app.route("/login").post(authController.login);
 
 app.listen(cfg.port, () => {
   console.log(`Example app listening at http://localhost:${cfg.port}`);
