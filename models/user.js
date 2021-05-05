@@ -3,12 +3,18 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
   {
-    name: { required: true, type: String },
-    email: { required: true, unique: true, type: String },
-    birthdate: { required: true, type: String },
+    firstName: { required: true, type: String },
+    lastName: { required: true, type: String },
+    password: { required: true, type: String },
+    role: {
+      type: String,
+      default: "CLIENT",
+      enum: ["CLIENT", "ADMIN"],
+    },
     phone: { required: true, unique: true, type: String },
-    adress: { required: true, type: String },
-    role: { required: true, type: String },
+    address: { required: true, type: String },
+    email: String,
+    birthdate: String,
   },
   {
     timestamps: true,
