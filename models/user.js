@@ -14,7 +14,7 @@ const userSchema = new Schema(
     phone: { required: true, unique: true, type: String },
     address: { required: true, type: String },
     email: String,
-    birthdate: String,
+    birthdate: Date,
   },
   {
     timestamps: true,
