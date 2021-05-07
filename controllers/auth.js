@@ -78,7 +78,6 @@ module.exports = {
       }
 
       const { phone, password } = req.body;
-
       const user = await User.findOne({ phone });
 
       if (!user) {
