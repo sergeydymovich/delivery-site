@@ -8,11 +8,12 @@ module.exports = {
 
     Product.find(findObj)
       .populate("category", "name")
+      .populate("composition", "name")
       .exec((err, products) => {
         if (err) {
           res.status(400).json({ message: err.message });
         } else {
-          res.json({ products });
+          res.status(200).json({ products });
         }
       });
   },
@@ -27,6 +28,7 @@ module.exports = {
       price,
       categoryID,
     } = req.body;
+    console.log(req.body);
 
     Product.create(
       {
@@ -43,7 +45,7 @@ module.exports = {
         if (err) {
           res.status(400).json({ message: err.message });
         } else {
-          res.json({ product });
+          res.status(200).json({ product });
         }
       }
     );
@@ -56,7 +58,7 @@ module.exports = {
       if (err) {
         res.status(400).json({ message: err.message });
       } else {
-        res.json({ product });
+        res.status(200).json({ product });
       }
     });
   },

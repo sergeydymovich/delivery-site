@@ -7,6 +7,7 @@ const cors = require("cors");
 const authController = require("./controllers/auth");
 const categoriesController = require("./controllers/categories");
 const productsController = require("./controllers/products");
+const ingredientsController = require("./controllers/ingredients");
 
 const uri = `mongodb+srv://${cfg.dbUser}:${cfg.dbUserPassword}@stolle.3qrhz.mongodb.net/${cfg.dbName}?retryWrites=true&w=majority`;
 
@@ -38,6 +39,13 @@ app
   .post(productsController.addProduct)
   .get(productsController.getProducts)
   .delete(productsController.deleteProduct);
+
+app
+  .route("/ingredients")
+  .post(ingredientsController.addIngredient)
+  .get(ingredientsController.getIngredients)
+  .delete(ingredientsController.deleteIngredient)
+  .put(ingredientsController.changeIngredient);
 
 app.listen(cfg.port, () => {
   console.log(`Example app listening at http://localhost:${cfg.port}`);

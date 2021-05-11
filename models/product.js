@@ -10,7 +10,7 @@ const userSchema = new Schema(
     volume: String,
     weight: String,
     image: String,
-    composition: Array,
+    composition: [{ type: Schema.Types.ObjectId, ref: "Ingredient" }],
   },
   {
     timestamps: true,
