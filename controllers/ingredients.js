@@ -19,7 +19,7 @@ module.exports = {
       if (err) {
         res.status(400).json({ message: err.message });
       } else {
-        res.status(200).json({ ingredient });
+        res.status(201).json({ ingredient });
       }
     });
   },
@@ -31,8 +31,8 @@ module.exports = {
 
     if (deletedIngredient.deletedCount) {
       Product.updateMany(
-        { composition: { $in: [_id] } },
-        { $pull: { composition: { $in: [_id] } } },
+        { ingredients: { $in: [_id] } },
+        { $pull: { ingredients: { $in: [_id] } } },
         (err, products) => {
           if (err) {
             res.status(400).json({ message: err.message });
@@ -42,7 +42,7 @@ module.exports = {
         }
       );
     } else {
-      res.json({ message: "ингредиент не удален" });
+      res.status(400).json({ message: "ингредиент не удален" });
     }
   },
 

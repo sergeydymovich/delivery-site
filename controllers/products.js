@@ -3,12 +3,12 @@ const Product = require("../models/Product.js");
 
 module.exports = {
   getProducts: (req, res) => {
-    const { categoryID } = req.body;
-    const findObj = categoryID ? { category: categoryID } : {};
+    const { category } = req.body;
+    const findObj = category ? { category } : {};
 
     Product.find(findObj)
       .populate("category", "name")
-      .populate("composition", "name")
+      .populate("ingredients", "name")
       .exec((err, products) => {
         if (err) {
           res.status(400).json({ message: err.message });
@@ -22,30 +22,33 @@ module.exports = {
       name,
       weight,
       volume,
+      size,
+      portionAmount,
       isAvailable,
-      image,
-      composition,
+      imageSrc,
+      ingredients,
       price,
-      categoryID,
+      category,
     } = req.body;
-    console.log(req.body);
 
     Product.create(
       {
         name,
         weight,
         volume,
+        size,
+        portionAmount,
         isAvailable,
-        image,
-        composition,
+        imageSrc,
+        ingredients,
         price,
-        category: categoryID,
+        category,
       },
       (err, product) => {
         if (err) {
           res.status(400).json({ message: err.message });
         } else {
-          res.status(200).json({ product });
+          res.status(201).json({ product });
         }
       }
     );

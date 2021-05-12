@@ -18,7 +18,7 @@ module.exports = {
       if (err) {
         res.status(400).json({ message: err.message });
       } else {
-        res.json({ category });
+        res.status(201).json({ category });
       }
     });
   },
@@ -30,7 +30,7 @@ module.exports = {
       if (err) {
         res.status(400).json({ message: err.message });
       } else {
-        res.json({ category });
+        res.status(200).json({ category });
       }
     });
   },
@@ -46,7 +46,7 @@ module.exports = {
         if (err) {
           res.status(400).json({ message: err.message });
         } else {
-          res.json({ category });
+          res.status(200).json({ category });
         }
       }
     );

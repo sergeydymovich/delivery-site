@@ -54,9 +54,13 @@ module.exports = {
           if (err) {
             res.status(400).json({ errorMessage: err._message });
           } else {
-            const token = jwt.sign({ userId: user._id }, cfg.jwtCode, {
-              expiresIn: "365d",
-            });
+            const token = jwt.sign(
+              { userId: user._id, role: user.role },
+              cfg.jwtCode,
+              {
+                expiresIn: "365d",
+              }
+            );
             res.status(201).json({
               user,
               token,
@@ -89,10 +93,14 @@ module.exports = {
       const isMatchPassword = await bcrypt.compare(password, user.password);
 
       if (isMatchPassword) {
-        const token = jwt.sign({ userId: user._id }, cfg.jwtCode, {
-          expiresIn: "365d",
-        });
-        res.status(201).json({
+        const token = jwt.sign(
+          { userId: user._id, role: user.role },
+          cfg.jwtCode,
+          {
+            expiresIn: "365d",
+          }
+        );
+        res.status(200).json({
           user,
           token,
         });

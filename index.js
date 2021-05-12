@@ -2,8 +2,10 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cfg = require("./config.js");
+const { admin } = require("./userRoles.js");
 const morgan = require("morgan");
 const cors = require("cors");
+const roleMiddleware = require("./middlewares/roleMiddleware");
 const authController = require("./controllers/auth");
 const categoriesController = require("./controllers/categories");
 const productsController = require("./controllers/products");
@@ -29,23 +31,23 @@ app.route("/login").post(authController.login);
 
 app
   .route("/categories")
-  .post(categoriesController.addCategory)
   .get(categoriesController.getCategories)
-  .delete(categoriesController.deleteCategory)
-  .put(categoriesController.changeCategory);
+  .post(roleMiddleware([admin]), categoriesController.addCategory)
+  .delete(roleMiddleware([admin]), categoriesController.deleteCategory)
+  .put(roleMiddleware([admin]), categoriesController.changeCategory);
 
 app
   .route("/products")
-  .post(productsController.addProduct)
   .get(productsController.getProducts)
-  .delete(productsController.deleteProduct);
+  .post(roleMiddleware([admin]), productsController.addProduct)
+  .delete(roleMiddleware([admin]), productsController.deleteProduct);
 
 app
   .route("/ingredients")
-  .post(ingredientsController.addIngredient)
   .get(ingredientsController.getIngredients)
-  .delete(ingredientsController.deleteIngredient)
-  .put(ingredientsController.changeIngredient);
+  .post(roleMiddleware([admin]), ingredientsController.addIngredient)
+  .delete(roleMiddleware([admin]), ingredientsController.deleteIngredient)
+  .put(roleMiddleware([admin]), ingredientsController.changeIngredient);
 
 app.listen(cfg.port, () => {
   console.log(`Example app listening at http://localhost:${cfg.port}`);
