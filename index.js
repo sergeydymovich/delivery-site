@@ -10,6 +10,7 @@ const authController = require("./controllers/auth");
 const categoriesController = require("./controllers/categories");
 const productsController = require("./controllers/products");
 const ingredientsController = require("./controllers/ingredients");
+const ordersController = require("./controllers/orders");
 
 const uri = `mongodb+srv://${cfg.dbUser}:${cfg.dbUserPassword}@stolle.3qrhz.mongodb.net/${cfg.dbName}?retryWrites=true&w=majority`;
 
@@ -48,6 +49,12 @@ app
   .post(roleMiddleware([admin]), ingredientsController.addIngredient)
   .delete(roleMiddleware([admin]), ingredientsController.deleteIngredient)
   .put(roleMiddleware([admin]), ingredientsController.changeIngredient);
+
+app
+  .route("/orders")
+  .get(ordersController.getOrders)
+  .post(ordersController.addOrder)
+  .put(roleMiddleware([admin]), ordersController.changeOrder);
 
 app.listen(cfg.port, () => {
   console.log(`Example app listening at http://localhost:${cfg.port}`);
