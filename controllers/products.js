@@ -1,4 +1,3 @@
-const Category = require("../models/Category.js");
 const Product = require("../models/Product.js");
 
 module.exports = {
@@ -9,6 +8,7 @@ module.exports = {
     Product.find(findObj)
       .populate("category", "name")
       .populate("ingredients", "name")
+      .populate("extraIngredients")
       .exec((err, products) => {
         if (err) {
           res.status(400).json({ message: err.message });
@@ -27,6 +27,7 @@ module.exports = {
       isAvailable,
       imageSrc,
       ingredients,
+      extraIngredients,
       price,
       category,
     } = req.body;
@@ -41,6 +42,7 @@ module.exports = {
         isAvailable,
         imageSrc,
         ingredients,
+        extraIngredients,
         price,
         category,
       },

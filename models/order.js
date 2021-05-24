@@ -1,5 +1,12 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const {
+  open,
+  inProgress,
+  delivering,
+  completed,
+  canceled,
+} = require("../constants/orderStatuses");
 
 const userSchema = new Schema(
   {
@@ -13,7 +20,7 @@ const userSchema = new Schema(
     status: {
       type: String,
       required: true,
-      enum: ["open", "in progress", "delivering", "completed", "canceled"],
+      enum: [open, inProgress, delivering, completed, canceled],
     },
     comment: String,
   },

@@ -13,6 +13,7 @@ const userSchema = new Schema(
     weight: String,
     imageSrc: String,
     ingredients: [{ type: Schema.Types.ObjectId, ref: "Ingredient" }],
+    extraIngredients: [{ type: Schema.Types.ObjectId, ref: "ExtraIngredient" }],
   },
   {
     timestamps: true,

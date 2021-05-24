@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cfg = require("./config.js");
-const { admin } = require("./userRoles.js");
+const { admin } = require("./constants/userRoles");
 const morgan = require("morgan");
 const cors = require("cors");
 const roleMiddleware = require("./middlewares/roleMiddleware");
@@ -10,6 +10,7 @@ const authController = require("./controllers/auth");
 const categoriesController = require("./controllers/categories");
 const productsController = require("./controllers/products");
 const ingredientsController = require("./controllers/ingredients");
+const extraIngredientsController = require("./controllers/extraIngredients");
 const ordersController = require("./controllers/orders");
 
 const uri = `mongodb+srv://${cfg.dbUser}:${cfg.dbUserPassword}@stolle.3qrhz.mongodb.net/${cfg.dbName}?retryWrites=true&w=majority`;
@@ -51,11 +52,24 @@ app
   .put(roleMiddleware([admin]), ingredientsController.changeIngredient);
 
 app
+  .route("/extra-ingredients")
+  .get(ingredientsController.getIngredients)
+  .post(roleMiddleware([admin]), extraIngredientsController.addExtraIngredient)
+  .delete(
+    roleMiddleware([admin]),
+    extraIngredientsController.deleteExtraIngredient
+  )
+  .put(
+    roleMiddleware([admin]),
+    extraIngredientsController.changeExtraIngredient
+  );
+
+app
   .route("/orders")
   .get(ordersController.getOrders)
   .post(ordersController.addOrder)
   .put(roleMiddleware([admin]), ordersController.changeOrder);
 
 app.listen(cfg.port, () => {
-  console.log(`Example app listening at http://localhost:${cfg.port}`);
+  console.log(`App listening at http://localhost:${cfg.port}`);
 });
