@@ -1,5 +1,5 @@
 const Order = require("../models/Order.js");
-const { sumArrayObjField } = require("../utils/array.utils");
+const { calculateOrderSum } = require("../utils/array.utils");
 
 module.exports = {
   getOrders: (req, res) => {
@@ -29,7 +29,7 @@ module.exports = {
           address,
           phone,
           products,
-          totalCost: sumArrayObjField(products, "price"),
+          totalCost: calculateOrderSum(products, "price"),
           status,
           comment,
         },

@@ -1,7 +1,7 @@
 module.exports = {
-  open: "open",
-  inProgress: "in progress",
-  delivering: "delivering",
-  completed: "completed",
-  canceled: "canceled",
+  OPEN: "OPEN",
+  IN_PROGRESS: "IN_PROGRESS",
+  DELIVERING: "DELIVERING",
+  COMPLETED: "COMPLETED",
+  CANCELED: "CANCELED",
 };

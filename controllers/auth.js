@@ -61,6 +61,7 @@ module.exports = {
                 expiresIn: "365d",
               }
             );
+
             res.status(201).json({
               user,
               token,
@@ -100,6 +101,9 @@ module.exports = {
             expiresIn: "365d",
           }
         );
+
+        delete user._doc.password;
+
         res.status(200).json({
           user,
           token,

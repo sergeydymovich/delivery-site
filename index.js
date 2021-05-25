@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const cfg = require("./config.js");
-const { admin } = require("./constants/userRoles");
+const USER_ROLES = require("./constants/userRoles");
 const morgan = require("morgan");
 const cors = require("cors");
 const roleMiddleware = require("./middlewares/roleMiddleware");
@@ -34,33 +34,45 @@ app.route("/login").post(authController.login);
 app
   .route("/categories")
   .get(categoriesController.getCategories)
-  .post(roleMiddleware([admin]), categoriesController.addCategory)
-  .delete(roleMiddleware([admin]), categoriesController.deleteCategory)
-  .put(roleMiddleware([admin]), categoriesController.changeCategory);
+  .post(roleMiddleware([USER_ROLES.ADMIN]), categoriesController.addCategory)
+  .delete(
+    roleMiddleware([USER_ROLES.ADMIN]),
+    categoriesController.deleteCategory
+  )
+  .put(roleMiddleware([USER_ROLES.ADMIN]), categoriesController.changeCategory);
 
 app
   .route("/products")
   .get(productsController.getProducts)
-  .post(roleMiddleware([admin]), productsController.addProduct)
-  .delete(roleMiddleware([admin]), productsController.deleteProduct);
+  .post(roleMiddleware([USER_ROLES.ADMIN]), productsController.addProduct)
+  .delete(roleMiddleware([USER_ROLES.ADMIN]), productsController.deleteProduct);
 
 app
   .route("/ingredients")
   .get(ingredientsController.getIngredients)
-  .post(roleMiddleware([admin]), ingredientsController.addIngredient)
-  .delete(roleMiddleware([admin]), ingredientsController.deleteIngredient)
-  .put(roleMiddleware([admin]), ingredientsController.changeIngredient);
+  .post(roleMiddleware([USER_ROLES.ADMIN]), ingredientsController.addIngredient)
+  .delete(
+    roleMiddleware([USER_ROLES.ADMIN]),
+    ingredientsController.deleteIngredient
+  )
+  .put(
+    roleMiddleware([USER_ROLES.ADMIN]),
+    ingredientsController.changeIngredient
+  );
 
 app
   .route("/extra-ingredients")
   .get(ingredientsController.getIngredients)
-  .post(roleMiddleware([admin]), extraIngredientsController.addExtraIngredient)
+  .post(
+    roleMiddleware([USER_ROLES.ADMIN]),
+    extraIngredientsController.addExtraIngredient
+  )
   .delete(
-    roleMiddleware([admin]),
+    roleMiddleware([USER_ROLES.ADMIN]),
     extraIngredientsController.deleteExtraIngredient
   )
   .put(
-    roleMiddleware([admin]),
+    roleMiddleware([USER_ROLES.ADMIN]),
     extraIngredientsController.changeExtraIngredient
   );
 
@@ -68,7 +80,7 @@ app
   .route("/orders")
   .get(ordersController.getOrders)
   .post(ordersController.addOrder)
-  .put(roleMiddleware([admin]), ordersController.changeOrder);
+  .put(roleMiddleware([USER_ROLES.ADMIN]), ordersController.changeOrder);
 
 app.listen(cfg.port, () => {
   console.log(`App listening at http://localhost:${cfg.port}`);
