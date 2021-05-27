@@ -5,6 +5,7 @@ const cfg = require("./config.js");
 const USER_ROLES = require("./constants/userRoles");
 const morgan = require("morgan");
 const cors = require("cors");
+const upload = require("./middlewares/uploadImageMiddleware");
 const roleMiddleware = require("./middlewares/roleMiddleware");
 const authController = require("./controllers/auth");
 const categoriesController = require("./controllers/categories");
@@ -23,6 +24,7 @@ mongoose
   })
   .catch((err) => console.log(err.reason));
 
+app.use("/uploads", express.static("uploads"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(morgan("dev"));
@@ -62,9 +64,10 @@ app
 
 app
   .route("/extra-ingredients")
-  .get(ingredientsController.getIngredients)
+  .get(extraIngredientsController.getExtraIngredients)
   .post(
     roleMiddleware([USER_ROLES.ADMIN]),
+    upload.single("image"),
     extraIngredientsController.addExtraIngredient
   )
   .delete(
