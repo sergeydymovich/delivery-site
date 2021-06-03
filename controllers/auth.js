@@ -79,7 +79,9 @@ module.exports = {
       const errors = validationResult(req);
 
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res
+          .status(400)
+          .json({ errorMessage: "Некорректный номер телефона или пароль" });
       }
 
       const { phone, password } = req.body;
