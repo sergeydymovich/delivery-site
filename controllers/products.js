@@ -25,12 +25,15 @@ module.exports = {
       size,
       portionAmount,
       isAvailable,
-      imageSrc,
+      image,
       ingredients,
       extraIngredients,
       price,
       category,
     } = req.body;
+    const img = req.file ? req.file.path : image;
+    const arrayIngredients = ingredients.split(',')
+    const arrayExtraIngredients = extraIngredients.split(',')
 
     Product.create(
       {
@@ -40,9 +43,9 @@ module.exports = {
         size,
         portionAmount,
         isAvailable,
-        imageSrc,
-        ingredients,
-        extraIngredients,
+        imageSrc: img,
+        ingredients: arrayIngredients,
+        extraIngredients: arrayExtraIngredients,
         price,
         category,
       },
