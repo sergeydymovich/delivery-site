@@ -1,4 +1,5 @@
 const Product = require("../models/Product.js");
+const cfg = require("../config");
 
 module.exports = {
   getProducts: (req, res) => {
@@ -13,7 +14,11 @@ module.exports = {
         if (err) {
           res.status(400).json({ message: err.message });
         } else {
-          res.status(200).json({ products });
+          const updateProducts = products.map((product) => ({
+            ...product._doc,
+            imageSrc: `http://localhost:${cfg.port}/` + product.imageSrc,
+          }));
+          res.status(200).json({ products: updateProducts });
         }
       });
   },

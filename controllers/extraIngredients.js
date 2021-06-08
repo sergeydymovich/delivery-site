@@ -27,7 +27,11 @@ module.exports = {
         if (err) {
           res.status(400).json({ message: err.message });
         } else {
-          res.status(201).json({ ingredient });
+          console.log(ingredient);
+          res.status(201).json({ 
+            ...ingredient._doc,
+            imageSrc: `http://localhost:${cfg.port}/` + ingredient.imageSrc,
+          });
         }
       }
     );
