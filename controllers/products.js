@@ -1,4 +1,6 @@
 const Product = require("../models/Product.js");
+const Ingredient = require("../models/Ingredient.js");
+const ExtraIngredient = require("../models/ExtraIngredient.js");
 const cfg = require("../config");
 
 module.exports = {
@@ -22,7 +24,7 @@ module.exports = {
         }
       });
   },
-  addProduct: (req, res) => {
+  addProduct: async (req, res) => {
     const {
       name,
       weight,
@@ -33,13 +35,23 @@ module.exports = {
       image,
       ingredients,
       extraIngredients,
+      newIngredients,
+      newExtraIngredients,
       price,
       category,
     } = req.body;
     const img = req.file ? req.file.path : image;
-    const arrayIngredients = ingredients.split(',')
-    const arrayExtraIngredients = extraIngredients.split(',')
+    const arrayReqIngredients = ingredients.split(',')
+    const arrayReqExtraIngredients = extraIngredients.split(',')
+    const arrayReqNewIngredients = newIngredients.split(',').map((ingredient) => ({ name: ingredient}))
+    const arrayReqNewExtraIngredients = newExtraIngredients.split(',').map((ingredient) => ({ name: ingredient}))
 
+     const createdIngredients = arrayReqNewIngredients.length ? await Ingredient.create(arrayReqNewIngredients) : [];
+     const createdExtraIngredients = arrayReqNewExtraIngredients.length ? await ExtraIngredient.create(arrayReqNewExtraIngredients) : [];
+
+     const ultimateIngredients = [...arrayReqIngredients, createdIngredients.map((ingredient) => ingredient._id)]
+     const ultimateExtraIngredients = [...arrayReqExtraIngredients, createdExtraIngredients.map((ingredient) => ingredient._id)]
+    
     Product.create(
       {
         name,
@@ -49,8 +61,8 @@ module.exports = {
         portionAmount,
         isAvailable,
         imageSrc: img,
-        ingredients: arrayIngredients,
-        extraIngredients: arrayExtraIngredients,
+        ingredients: ultimateIngredients,
+        extraIngredients: ultimateExtraIngredients,
         price,
         category,
       },
