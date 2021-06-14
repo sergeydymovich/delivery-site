@@ -18,7 +18,7 @@ module.exports = {
         } else {
           const updateProducts = products.map((product) => ({
             ...product._doc,
-            imageSrc: `http://localhost:${cfg.port}/` + product.imageSrc,
+            imageSrc: product.imageSrc ? `http://localhost:${cfg.port}/` + product.imageSrc : '',
           }));
           res.status(200).json({ products: updateProducts });
         }
@@ -41,31 +41,103 @@ module.exports = {
       category,
     } = req.body;
     const img = req.file ? req.file.path : image;
-    const arrayReqIngredients = ingredients.split(',')
-    const arrayReqExtraIngredients = extraIngredients.split(',')
-    const arrayReqNewIngredients = newIngredients.split(',').map((ingredient) => ({ name: ingredient}))
-    const arrayReqNewExtraIngredients = newExtraIngredients.split(',').map((ingredient) => ({ name: ingredient}))
-
-     const createdIngredients = arrayReqNewIngredients.length ? await Ingredient.create(arrayReqNewIngredients) : [];
-     const createdExtraIngredients = arrayReqNewExtraIngredients.length ? await ExtraIngredient.create(arrayReqNewExtraIngredients) : [];
-
-     const ultimateIngredients = [...arrayReqIngredients, createdIngredients.map((ingredient) => ingredient._id)]
-     const ultimateExtraIngredients = [...arrayReqExtraIngredients, createdExtraIngredients.map((ingredient) => ingredient._id)]
+    const arrayIngredients = ingredients ? ingredients.split(',') : [];
+    const arrayExtraIngredients = extraIngredients ? extraIngredients.split(',') : [];
+    const arrayNewIngredients = newIngredients ? newIngredients.split(',').map((ingredient) => ({ name: ingredient})) : undefined;
+    const arrayNewExtraIngredients = newExtraIngredients ? newExtraIngredients.split(',').map((ingredient) => ({ name: ingredient})): undefined;
     
-    Product.create(
-      {
-        name,
-        weight,
-        volume,
-        size,
-        portionAmount,
-        isAvailable,
-        imageSrc: img,
-        ingredients: ultimateIngredients,
-        extraIngredients: ultimateExtraIngredients,
-        price,
-        category,
-      },
+    const createdIngredients = arrayNewIngredients ? await Ingredient.create(arrayNewIngredients) : undefined;
+    const createdExtraIngredients = arrayNewExtraIngredients ? await ExtraIngredient.create(arrayNewExtraIngredients) : undefined;
+
+
+    if (createdIngredients) {
+      const newIngredientsIds = createdIngredients.map((ingredient) => ingredient._id);
+      arrayIngredients.push(newIngredientsIds)
+    }
+
+    if (createdExtraIngredients) {
+      const newExtraIngredientsIds = createdExtraIngredients.map((ingredient) => ingredient._id);
+      arrayExtraIngredients.push(newExtraIngredientsIds)
+    }
+
+    const createObj = {
+      name,
+      weight,
+      volume,
+      size,
+      portionAmount,
+      isAvailable,
+      imageSrc: img,
+      ingredients: arrayIngredients,
+      extraIngredients: arrayExtraIngredients,
+      price,
+      category,
+    }
+    
+    Product.create(createObj,  (err, product) => {
+        if (err) {
+          res.status(400).json({ message: err.message });
+        } else {
+          res.status(201).json({ product });
+        }
+      }
+    );
+  },
+  changeProduct: async (req, res) => {
+    const {
+      id,
+      name,
+      weight,
+      volume,
+      size,
+      portionAmount,
+      isAvailable,
+      image,
+      ingredients,
+      extraIngredients,
+      newIngredients,
+      newExtraIngredients,
+      price,
+      category,
+    } = req.body;
+    const img = req.file ? req.file.path : image;
+    const arrayIngredients = ingredients ? ingredients.split(',') : [];
+    const arrayExtraIngredients = extraIngredients ? extraIngredients.split(',') : [];
+    const arrayNewIngredients = newIngredients ? newIngredients.split(',').map((ingredient) => ({ name: ingredient})) : undefined;
+    const arrayNewExtraIngredients = newExtraIngredients ? newExtraIngredients.split(',').map((ingredient) => ({ name: ingredient})): undefined;
+    
+    const createdIngredients = arrayNewIngredients ? await Ingredient.create(arrayNewIngredients) : undefined;
+    const createdExtraIngredients = arrayNewExtraIngredients ? await ExtraIngredient.create(arrayNewExtraIngredients) : undefined;
+
+
+    if (createdIngredients) {
+      const newIngredientsIds = createdIngredients.map((ingredient) => ingredient._id);
+      arrayIngredients.push(newIngredientsIds)
+    }
+
+    if (createdExtraIngredients) {
+      const newExtraIngredientsIds = createdExtraIngredients.map((ingredient) => ingredient._id);
+      arrayExtraIngredients.push(newExtraIngredientsIds)
+    }
+
+
+    const updateObj = {
+      name,
+      weight,
+      volume,
+      size,
+      portionAmount,
+      isAvailable,
+      imageSrc: img,
+      ingredients: arrayIngredients,
+      extraIngredients: arrayExtraIngredients,
+      price,
+      category,
+    }
+    
+    Product.findOneAndUpdate(
+      { _id: id },
+      updateObj,
       (err, product) => {
         if (err) {
           res.status(400).json({ message: err.message });
@@ -75,7 +147,6 @@ module.exports = {
       }
     );
   },
-
   deleteProduct: (req, res) => {
     const { _id } = req.body;
 

@@ -12,8 +12,8 @@ const userSchema = new Schema(
     volume: String,
     weight: String,
     imageSrc: String,
-    ingredients: [{ type: Schema.Types.ObjectId, ref: "Ingredient" }],
-    extraIngredients: [{ type: Schema.Types.ObjectId, ref: "ExtraIngredient" }],
+    ingredients: [{ type: Schema.Types.ObjectId, default: [], ref: "Ingredient" }],
+    extraIngredients: [{ type: Schema.Types.ObjectId, default: [], ref: "ExtraIngredient" }],
   },
   {
     timestamps: true,

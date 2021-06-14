@@ -46,10 +46,16 @@ app
 app
   .route("/products")
   .get(productsController.getProducts)
-  .post(roleMiddleware([USER_ROLES.ADMIN]),
+  .post(
+    roleMiddleware([USER_ROLES.ADMIN]),
     upload.single("image"),
     productsController.addProduct)
-  .delete(roleMiddleware([USER_ROLES.ADMIN]), productsController.deleteProduct);
+  .delete(roleMiddleware([USER_ROLES.ADMIN]), productsController.deleteProduct)
+  .put(
+    roleMiddleware([USER_ROLES.ADMIN]),
+    upload.single("image"),
+    productsController.changeProduct
+  );
 
 app
   .route("/ingredients")
