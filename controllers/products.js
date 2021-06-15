@@ -6,9 +6,13 @@ const cfg = require("../config");
 module.exports = {
   getProducts: (req, res) => {
     const { category } = req.body;
+    const { limit, offset } = req.query;
     const findObj = category ? { category } : {};
 
+    Product.count(findObj).then((count) =>
     Product.find(findObj)
+      .limit(Number(limit))
+      .skip(Number(offset))
       .populate("category", "name")
       .populate("ingredients", "name")
       .populate("extraIngredients")
@@ -20,9 +24,12 @@ module.exports = {
             ...product._doc,
             imageSrc: product.imageSrc ? `http://localhost:${cfg.port}/` + product.imageSrc : '',
           }));
-          res.status(200).json({ products: updateProducts });
+          res.status(200).json({
+             products: updateProducts,
+             productsAmount: count,
+          });
         }
-      });
+      }));
   },
   addProduct: async (req, res) => {
     const {
