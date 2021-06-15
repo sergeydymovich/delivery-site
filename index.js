@@ -84,6 +84,7 @@ app
   )
   .put(
     roleMiddleware([USER_ROLES.ADMIN]),
+    upload.single("image"),
     extraIngredientsController.changeExtraIngredient
   );
 

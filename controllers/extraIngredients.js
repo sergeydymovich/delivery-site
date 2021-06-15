@@ -10,7 +10,7 @@ module.exports = {
       } else {
         const updateIngredients = ingredients.map((ingredient) => ({
           ...ingredient._doc,
-          imageSrc: `http://localhost:${cfg.port}/` + ingredient.imageSrc,
+          imageSrc: ingredient.imageSrc ? `http://localhost:${cfg.port}/` + ingredient.imageSrc : '',
         }));
         res.status(200).json({ ingredients: updateIngredients });
       }
@@ -30,7 +30,7 @@ module.exports = {
           console.log(ingredient);
           res.status(201).json({ 
             ...ingredient._doc,
-            imageSrc: `http://localhost:${cfg.port}/` + ingredient.imageSrc,
+            imageSrc: ingredient.imageSrc ? `http://localhost:${cfg.port}/` + ingredient.imageSrc : '',
           });
         }
       }
@@ -60,17 +60,26 @@ module.exports = {
   },
 
   changeExtraIngredient: (req, res) => {
-    const { _id, name } = req.body;
+    const { _id, name, price, image } = req.body;
+    console.log("bodyyyy", req.body);
+    const img = req.file ? req.file.path : image;
 
     ExtraIngredient.findOneAndUpdate(
       { _id },
-      { name },
+      { 
+        name,
+        price,
+        imageSrc: img,
+      },
       { new: true },
       (err, ingredient) => {
         if (err) {
           res.status(400).json({ message: err.message });
         } else {
-          res.status(200).json({ ingredient });
+          res.status(201).json({ 
+            ...ingredient._doc,
+            imageSrc: ingredient.imageSrc ? `http://localhost:${cfg.port}/` + ingredient.imageSrc : '',
+          });
         }
       }
     );
