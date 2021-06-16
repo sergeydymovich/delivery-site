@@ -5,9 +5,13 @@ const cfg = require("../config");
 
 module.exports = {
   getProducts: (req, res) => {
-    const { category } = req.body;
-    const { limit, offset } = req.query;
-    const findObj = category ? { category } : {};
+    const { limit, offset, filterWord } = req.query;
+    const findObj = {};
+
+    if (filterWord) {
+       findObj.name = { $regex: filterWord, $options: "i" };
+    }
+
 
     Product.count(findObj).then((count) =>
     Product.find(findObj)
