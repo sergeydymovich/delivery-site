@@ -1,23 +1,40 @@
 const Order = require("../models/Order.js");
-const { calculateOrderSum } = require("../utils/array.utils");
 
 module.exports = {
   getOrders: (req, res) => {
-    const { status } = req.query;
+    const { startDate, endDate, limit, offset, } = req.query;
     const findObj = {};
-    if (status) findObj.status = status;
+    
+    if (startDate) {
+      findObj.createdAt = {"$gte": startDate }     
+    }
 
-    Order.find(findObj, (err, orders) => {
+    if (startDate && endDate) {
+      findObj.createdAt = { "$lt": endDate, "$gte": startDate }
+    }
+     
+   
+
+
+    Order.count(findObj).then((count) =>
+    Order.find(findObj)
+    .limit(Number(limit))
+    .skip(Number(offset))
+    .exec((err, orders) => {
       if (err) {
         res.status(400).json({ message: err.message });
       } else {
-        res.json({ orders });
+        res.json({ 
+          orders,
+          ordersAmount: count, 
+        });
       }
-    });
+    }))     
+
   },
 
   addOrder: (req, res) => {
-    const { customer, name, address, phone, products, status, comment } =
+    const { customer, name, address, phone, products, status, comment, totalCost } =
       req.body;
 
     Order.countDocuments().then((count) => {
@@ -29,7 +46,7 @@ module.exports = {
           address,
           phone,
           products,
-          totalCost: calculateOrderSum(products, "price"),
+          totalCost,
           status,
           comment,
         },
