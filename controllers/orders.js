@@ -2,9 +2,9 @@ const Order = require("../models/Order.js");
 
 module.exports = {
   getOrders: (req, res) => {
-    const { startDate, endDate, limit, offset, } = req.query;
+    const { startDate, endDate, limit, offset, filterWord } = req.query;
     const findObj = {};
-    
+
     if (startDate) {
       findObj.createdAt = {"$gte": startDate }     
     }
@@ -12,10 +12,11 @@ module.exports = {
     if (startDate && endDate) {
       findObj.createdAt = { "$lt": endDate, "$gte": startDate }
     }
+
+    if (filterWord) {
+      findObj.phone = { $regex: filterWord, $options: "i" };
+   }
      
-   
-
-
     Order.count(findObj).then((count) =>
     Order.find(findObj)
     .limit(Number(limit))
