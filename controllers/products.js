@@ -5,11 +5,15 @@ const cfg = require("../config");
 
 module.exports = {
   getProducts: (req, res) => {
-    const { limit, offset, filterWord } = req.query;
+    const { limit, offset, filterWord, category } = req.query;
     const findObj = {};
 
     if (filterWord) {
        findObj.name = { $regex: filterWord, $options: "i" };
+    }
+
+    if (category) {
+      findObj.category = category;
     }
 
 
@@ -71,6 +75,7 @@ module.exports = {
       arrayExtraIngredients.push(newExtraIngredientsIds)
     }
 
+    console.log("!!!!!!!!!!!!!!!!!!!!",arrayExtraIngredients, arrayIngredients)
     const createObj = {
       name,
       weight,

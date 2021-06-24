@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
   {
-    name: { required: true, type: String },
+    name: { required: true, unique: true, type: String },
     price: {  type: String },
     imageSrc: {  type: String },
   },
