@@ -61,16 +61,22 @@ module.exports = {
 
   changeExtraIngredient: (req, res) => {
     const { _id, name, price, image } = req.body;
-    console.log("bodyyyy", req.body);
-    const img = req.file ? req.file.path : image;
+    const updateObj = {
+      name,
+      price,
+    }
 
+    if (req.file) {
+      updateObj.imageSrc = req.file.path
+    }
+
+    if (typeof image === 'string' && !image.length) {
+      updateObj.imageSrc = '';
+    }
+    
     ExtraIngredient.findOneAndUpdate(
       { _id },
-      { 
-        name,
-        price,
-        imageSrc: img,
-      },
+      updateObj,
       { new: true },
       (err, ingredient) => {
         if (err) {

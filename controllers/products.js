@@ -116,7 +116,6 @@ module.exports = {
       price,
       category,
     } = req.body;
-    const img = req.file ? req.file.path : image;
     const arrayIngredients = ingredients ? ingredients.split(',') : [];
     const arrayExtraIngredients = extraIngredients ? extraIngredients.split(',') : [];
     const arrayNewIngredients = newIngredients ? newIngredients.split(',').map((ingredient) => ({ name: ingredient})) : undefined;
@@ -144,11 +143,18 @@ module.exports = {
       size,
       portionAmount,
       isAvailable,
-      imageSrc: img,
       ingredients: arrayIngredients,
       extraIngredients: arrayExtraIngredients,
       price,
       category,
+    }
+
+    if (req.file) {
+      updateObj.imageSrc = req.file.path
+    }
+
+    if (typeof image === 'string' && !image.length) {
+      updateObj.imageSrc = '';
     }
     
     Product.findOneAndUpdate(
