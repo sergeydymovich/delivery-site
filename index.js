@@ -13,6 +13,7 @@ const productsController = require("./controllers/products");
 const ingredientsController = require("./controllers/ingredients");
 const extraIngredientsController = require("./controllers/extraIngredients");
 const ordersController = require("./controllers/orders");
+const pizzaSizesController = require("./controllers/pizzaSizes");
 
 const uri = `mongodb+srv://${cfg.dbUser}:${cfg.dbUserPassword}@stolle.3qrhz.mongodb.net/${cfg.dbName}?retryWrites=true&w=majority`;
 
@@ -93,6 +94,12 @@ app
   .get(ordersController.getOrders)
   .post(ordersController.addOrder)
   .put(roleMiddleware([USER_ROLES.ADMIN]), ordersController.changeOrder);
+
+app
+  .route("/pizza-sizes")
+  .get(pizzaSizesController.getPizzaSizes)
+  .post(pizzaSizesController.addPizzaSize)
+  .put(roleMiddleware([USER_ROLES.ADMIN]), pizzaSizesController.changePizzaSizes);
 
 app.listen(cfg.port, () => {
   console.log(`App listening at http://localhost:${cfg.port}`);
