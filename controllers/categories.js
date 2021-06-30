@@ -2,7 +2,9 @@ const Category = require("../models/Category.js");
 
 module.exports = {
   getCategories: (req, res) => {
-    Category.find({}, (err, categories) => {
+    Category.find({})
+      .populate('fields')
+      .exec((err, categories) => {
       if (err) {
         res.status(400).json({ message: err.message });
       } else {
@@ -12,9 +14,9 @@ module.exports = {
   },
 
   addCategory: (req, res) => {
-    const { name } = req.body;
+    const { name, fields } = req.body;
 
-    Category.create({ name }, (err, category) => {
+    Category.create({ name, fields }, (err, category) => {
       if (err) {
         res.status(400).json({ message: err.message });
       } else {

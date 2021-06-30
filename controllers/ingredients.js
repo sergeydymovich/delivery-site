@@ -11,7 +11,6 @@ module.exports = {
       }
     });
   },
-
   addIngredient: (req, res) => {
     const { name } = req.body;
 
@@ -23,7 +22,6 @@ module.exports = {
       }
     });
   },
-
   deleteIngredient: async (req, res) => {
     const { _id } = req.body;
 
@@ -45,7 +43,6 @@ module.exports = {
       res.status(400).json({ message: "ингредиент не удален" });
     }
   },
-
   changeIngredient: (req, res) => {
     const { _id, name } = req.body;
 

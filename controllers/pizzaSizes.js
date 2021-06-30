@@ -21,18 +21,18 @@ module.exports = {
       }
     });
   },
-  changePizzaSizes: (req, res) => {
+  changePizzaSize: (req, res) => {
     const { _id, size } = req.body;
 
     PizzaSize.findOneAndUpdate(
       { _id },
       { size },
       { new: true },
-      (err, pizzaSizes) => {
+      (err, pizzaSize) => {
         if (err) {
           res.status(400).json({ message: err.message });
         } else {
-          res.status(200).json({ pizzaSizes });
+          res.status(200).json({ pizzaSize });
         }
       }
     );

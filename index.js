@@ -14,6 +14,7 @@ const ingredientsController = require("./controllers/ingredients");
 const extraIngredientsController = require("./controllers/extraIngredients");
 const ordersController = require("./controllers/orders");
 const pizzaSizesController = require("./controllers/pizzaSizes");
+const fieldsController = require("./controllers/fields");
 
 const uri = `mongodb+srv://${cfg.dbUser}:${cfg.dbUserPassword}@stolle.3qrhz.mongodb.net/${cfg.dbName}?retryWrites=true&w=majority`;
 
@@ -37,7 +38,7 @@ app.route("/login").post(authController.login);
 app
   .route("/categories")
   .get(categoriesController.getCategories)
-  .post(roleMiddleware([USER_ROLES.ADMIN]), categoriesController.addCategory)
+  .post(categoriesController.addCategory)
   .delete(
     roleMiddleware([USER_ROLES.ADMIN]),
     categoriesController.deleteCategory
@@ -46,17 +47,14 @@ app
 
 app
   .route("/products")
-  .get(productsController.getProducts)
-  .post(
-    roleMiddleware([USER_ROLES.ADMIN]),
-    upload.single("image"),
-    productsController.addProduct)
-  .delete(roleMiddleware([USER_ROLES.ADMIN]), productsController.deleteProduct)
-  .put(
-    roleMiddleware([USER_ROLES.ADMIN]),
-    upload.single("image"),
-    productsController.changeProduct
-  );
+  // .get(productsController.getProducts)
+  .post(upload.single("image"), productsController.addProduct)
+  // .delete(roleMiddleware([USER_ROLES.ADMIN]), productsController.deleteProduct)
+  // .put(
+  //   roleMiddleware([USER_ROLES.ADMIN]),
+  //   upload.single("image"),
+  //   productsController.changeProduct
+  // );
 
 app
   .route("/ingredients")
@@ -99,7 +97,12 @@ app
   .route("/pizza-sizes")
   .get(pizzaSizesController.getPizzaSizes)
   .post(pizzaSizesController.addPizzaSize)
-  .put(roleMiddleware([USER_ROLES.ADMIN]), pizzaSizesController.changePizzaSizes);
+  .put(roleMiddleware([USER_ROLES.ADMIN]), pizzaSizesController.changePizzaSize);
+
+app
+  .route("/fields")
+  .post(fieldsController.addField)
+  .get(fieldsController.getFields)
 
 app.listen(cfg.port, () => {
   console.log(`App listening at http://localhost:${cfg.port}`);
