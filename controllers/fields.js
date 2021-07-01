@@ -13,11 +13,11 @@ module.exports = {
   addField: (req, res) => {
     const { name, label, description, is_default, unit, ui_type } = req.body;
 
-    Field.create({ name, label, description, is_default, unit, ui_type }, (err, type) => {
+    Field.create({ name, label, description, is_default, unit, ui_type }, (err, field) => {
       if (err) {
         res.status(400).json({ message: err.message });
       } else {
-        res.status(201).json({ type });
+        res.status(201).json({ field });
       }
     });
   },

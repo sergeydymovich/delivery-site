@@ -38,11 +38,11 @@ module.exports = {
   },
 
   changeCategory: (req, res) => {
-    const { _id, name } = req.body;
+    const { _id, name, fields } = req.body;
 
     Category.findOneAndUpdate(
       { _id },
-      { name },
+      { name, fields },
       { new: true },
       (err, category) => {
         if (err) {
