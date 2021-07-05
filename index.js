@@ -43,7 +43,7 @@ app
     roleMiddleware([USER_ROLES.ADMIN]),
     categoriesController.deleteCategory
   )
-  .put(roleMiddleware([USER_ROLES.ADMIN]), categoriesController.changeCategory);
+  .put(roleMiddleware([USER_ROLES.ADMIN]), categoriesController.updateCategory);
 
 app
   .route("/products")
@@ -66,7 +66,7 @@ app
   )
   .put(
     roleMiddleware([USER_ROLES.ADMIN]),
-    ingredientsController.changeIngredient
+    ingredientsController.updateIngredient
   );
 
 app
@@ -84,20 +84,20 @@ app
   .put(
     roleMiddleware([USER_ROLES.ADMIN]),
     upload.single("image"),
-    extraIngredientsController.changeExtraIngredient
+    extraIngredientsController.updateExtraIngredient
   );
 
 app
   .route("/orders")
   .get(ordersController.getOrders)
   .post(ordersController.addOrder)
-  .put(roleMiddleware([USER_ROLES.ADMIN]), ordersController.changeOrder);
+  .put(roleMiddleware([USER_ROLES.ADMIN]), ordersController.updateOrder);
 
 app
   .route("/pizza-sizes")
   .get(pizzaSizesController.getPizzaSizes)
   .post(pizzaSizesController.addPizzaSize)
-  .put(roleMiddleware([USER_ROLES.ADMIN]), pizzaSizesController.changePizzaSize);
+  .put(roleMiddleware([USER_ROLES.ADMIN]), pizzaSizesController.updatePizzaSize);
 
 app
   .route("/fields")

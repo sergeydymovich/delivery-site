@@ -4,4 +4,6 @@ module.exports = {
   dbUser: "admin",
   dbUserPassword: "stolle666",
   jwtCode: "stolle654",
+  tokenExpiresIn: "365d",
+  maxImageSize: '5MB',
 };

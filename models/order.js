@@ -4,13 +4,13 @@ const ORDER_STATUSES = require("../constants/orderStatuses");
 
 const userSchema = new Schema(
   {
-    orderNumber: Number,
+    order_number: Number,
     customer: { type: Schema.Types.ObjectId, ref: "User" },
     address: { type: String, required: true },
     name: { type: String, required: true },
     phone: { type: String, required: true },
     products: { type: Array, required: true },
-    totalCost: Number,
+    total_cost: Number,
     status: {
       type: String,
       required: true,

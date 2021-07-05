@@ -4,8 +4,8 @@ const USER_ROLES = require("../constants/userRoles");
 
 const userSchema = new Schema(
   {
-    firstName: { required: true, type: String },
-    lastName: { required: true, type: String },
+    first_name: { required: true, type: String },
+    last_name: { required: true, type: String },
     password: { required: true, type: String },
     role: {
       type: String,

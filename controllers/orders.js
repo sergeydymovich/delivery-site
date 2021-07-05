@@ -27,7 +27,7 @@ module.exports = {
       } else {
         res.json({ 
           orders,
-          ordersAmount: count, 
+          orders_amount: count, 
         });
       }
     }))     
@@ -35,19 +35,19 @@ module.exports = {
   },
 
   addOrder: (req, res) => {
-    const { customer, name, address, phone, products, status, comment, totalCost } =
+    const { customer, name, address, phone, products, status, comment, total_cost } =
       req.body;
 
     Order.countDocuments().then((count) => {
       Order.create(
         {
-          orderNumber: ++count,
+          order_number: ++count,
           customer,
           name,
           address,
           phone,
           products,
-          totalCost,
+          total_cost,
           status,
           comment,
         },
@@ -61,7 +61,7 @@ module.exports = {
       );
     });
   },
-  changeOrder: (req, res) => {
+  updateOrder: (req, res) => {
     const { _id, status } = req.body;
 
     Order.findOneAndUpdate(

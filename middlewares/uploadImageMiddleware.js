@@ -1,4 +1,5 @@
 const multer = require("multer");
+const { maxImageSize } = require("../config.js");
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -16,11 +17,10 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const limits = {
-  fileSize: 1024 * 1024 * 5,
-};
 module.exports = multer({
   storage,
   fileFilter,
-  limits,
+  limits: {
+    fileSize: maxImageSize
+  },
 });

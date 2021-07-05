@@ -5,7 +5,7 @@ const userSchema = new Schema(
   {
     name: { required: true, unique: true, type: String },
     price: {  type: String },
-    imageSrc: {  type: String },
+    image_src: String,
   },
   {
     timestamps: true,

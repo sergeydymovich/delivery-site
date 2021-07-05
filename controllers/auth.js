@@ -1,9 +1,7 @@
 const User = require("../models/User.js");
-const jwt = require("jsonwebtoken");
-const cfg = require("../config.js");
-const { validationResult } = require("express-validator");
+const { validationResult, body } = require("express-validator");
 const bcrypt = require("bcryptjs");
-const { body } = require("express-validator");
+const { getAuthToken } = require('../utils/getAuthToken');
 
 module.exports = {
   register: [
@@ -19,8 +17,8 @@ module.exports = {
       }
 
       const {
-        firstName,
-        lastName,
+        first_name,
+        last_name,
         password,
         role,
         phone,
@@ -41,8 +39,8 @@ module.exports = {
 
       User.create(
         {
-          firstName,
-          lastName,
+          first_name,
+          last_name,
           password: hashedPassword,
           role,
           phone,
@@ -54,14 +52,7 @@ module.exports = {
           if (err) {
             res.status(400).json({ errorMessage: err._message });
           } else {
-            const token = jwt.sign(
-              { userId: user._id, role: user.role },
-              cfg.jwtCode,
-              {
-                expiresIn: "365d",
-              }
-            );
-
+            const token = getAuthToken(user._id, user.role);
             res.status(201).json({
               user,
               token,
@@ -96,13 +87,7 @@ module.exports = {
       const isMatchPassword = await bcrypt.compare(password, user.password);
 
       if (isMatchPassword) {
-        const token = jwt.sign(
-          { userId: user._id, role: user.role },
-          cfg.jwtCode,
-          {
-            expiresIn: "365d",
-          }
-        );
+        const token = getAuthToken(user._id, user.role);
 
         delete user._doc.password;
 

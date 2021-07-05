@@ -21,7 +21,7 @@ module.exports = {
       }
     });
   },
-  changePizzaSize: (req, res) => {
+  updatePizzaSize: (req, res) => {
     const { _id, size } = req.body;
 
     PizzaSize.findOneAndUpdate(

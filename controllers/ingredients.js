@@ -43,7 +43,7 @@ module.exports = {
       res.status(400).json({ message: "ингредиент не удален" });
     }
   },
-  changeIngredient: (req, res) => {
+  updateIngredient: (req, res) => {
     const { _id, name } = req.body;
 
     Ingredient.findOneAndUpdate(

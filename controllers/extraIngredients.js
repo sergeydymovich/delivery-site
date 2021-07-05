@@ -4,15 +4,15 @@ const cfg = require("../config");
 
 module.exports = {
   getExtraIngredients: (req, res) => {
-    ExtraIngredient.find({}, (err, ingredients) => {
+    ExtraIngredient.find({}, (err, ingredientsRow) => {
       if (err) {
         res.status(400).json({ message: err.message });
       } else {
-        const updateIngredients = ingredients.map((ingredient) => ({
+        const ingredients = ingredientsRow.map((ingredient) => ({
           ...ingredient._doc,
-          imageSrc: ingredient.imageSrc ? `http://localhost:${cfg.port}/` + ingredient.imageSrc : '',
+          image_src: ingredient.image_src ? `http://localhost:${cfg.port}/` + ingredient.image_src : '',
         }));
-        res.status(200).json({ ingredients: updateIngredients });
+        res.status(200).json({ ingredients });
       }
     });
   },
@@ -22,7 +22,7 @@ module.exports = {
     const img = req.file ? req.file.path : image;
 
     ExtraIngredient.create(
-      { name, price, imageSrc: img },
+      { name, price, image_src: img },
       (err, ingredient) => {
         if (err) {
           res.status(400).json({ message: err.message });
@@ -30,7 +30,7 @@ module.exports = {
           console.log(ingredient);
           res.status(201).json({ 
             ...ingredient._doc,
-            imageSrc: ingredient.imageSrc ? `http://localhost:${cfg.port}/` + ingredient.imageSrc : '',
+            image_src: ingredient.image_src ? `http://localhost:${cfg.port}/` + ingredient.image_src : '',
           });
         }
       }
@@ -59,24 +59,24 @@ module.exports = {
     }
   },
 
-  changeExtraIngredient: (req, res) => {
+  updateExtraIngredient: (req, res) => {
     const { _id, name, price, image } = req.body;
-    const updateObj = {
+    const updatedObj = {
       name,
       price,
     }
 
     if (req.file) {
-      updateObj.imageSrc = req.file.path
+      updatedObj.image_src = req.file.path
     }
 
     if (typeof image === 'string' && !image.length) {
-      updateObj.imageSrc = '';
+      updatedObj.image_src = '';
     }
     
     ExtraIngredient.findOneAndUpdate(
       { _id },
-      updateObj,
+      updatedObj,
       { new: true },
       (err, ingredient) => {
         if (err) {
@@ -84,7 +84,7 @@ module.exports = {
         } else {
           res.status(201).json({ 
             ...ingredient._doc,
-            imageSrc: ingredient.imageSrc ? `http://localhost:${cfg.port}/` + ingredient.imageSrc : '',
+            image_src: ingredient.image_src ? `http://localhost:${cfg.port}/` + ingredient.image_src : '',
           });
         }
       }

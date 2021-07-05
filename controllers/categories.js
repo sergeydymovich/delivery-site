@@ -37,7 +37,7 @@ module.exports = {
     });
   },
 
-  changeCategory: (req, res) => {
+  updateCategory: (req, res) => {
     const { _id, name, fields } = req.body;
 
     Category.findOneAndUpdate(
