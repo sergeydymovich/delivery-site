@@ -9,6 +9,7 @@ const userSchema = new Schema(
     description: { type: String, required: true },
     unit: String,
     is_default: { type: Boolean, default: false },
+    is_base: { type: Boolean, default: false },
     ui_type: {
       type: String,
       required: true,

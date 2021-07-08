@@ -97,12 +97,15 @@ app
   .route("/pizza-sizes")
   .get(pizzaSizesController.getPizzaSizes)
   .post(pizzaSizesController.addPizzaSize)
-  .put(roleMiddleware([USER_ROLES.ADMIN]), pizzaSizesController.updatePizzaSize);
+  .put(pizzaSizesController.updatePizzaSize)
+  .delete(pizzaSizesController.deletePizzaSize);
 
 app
   .route("/fields")
   .post(fieldsController.addField)
   .get(fieldsController.getFields)
+  .put(fieldsController.updateField)
+  .delete(fieldsController.deleteField)
 
 app.listen(cfg.port, () => {
   console.log(`App listening at http://localhost:${cfg.port}`);
