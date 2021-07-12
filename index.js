@@ -47,14 +47,10 @@ app
 
 app
   .route("/products")
-  // .get(productsController.getProducts)
+  .get(productsController.getProducts)
   .post(upload.single("image"), productsController.addProduct)
-  // .delete(roleMiddleware([USER_ROLES.ADMIN]), productsController.deleteProduct)
-  // .put(
-  //   roleMiddleware([USER_ROLES.ADMIN]),
-  //   upload.single("image"),
-  //   productsController.changeProduct
-  // );
+  .put(upload.single("image"), productsController.changeProduct);
+    // .delete(roleMiddleware([USER_ROLES.ADMIN]), productsController.deleteProduct)
 
 app
   .route("/ingredients")
