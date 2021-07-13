@@ -1,6 +1,5 @@
 const Product = require("../models/Product.js");
-const Ingredient = require("../models/Ingredient.js");
-const ExtraIngredient = require("../models/ExtraIngredient.js");
+const { createProductObj } = require('../utils/createProductObj');
 
 module.exports = {
   getProducts: (req, res) => {
@@ -34,55 +33,7 @@ module.exports = {
       }));
   },
   addProduct: async (req, res) => {
-    const {
-      name,
-      image_src,
-      category,
-      ingredients,
-      extra_ingredients,
-      new_ingredients,
-      new_extra_ingredients,
-      pizza_sizes,
-      ...rest
-    } = req.body;
-    const arrayPizzaSizes = pizza_sizes ? JSON.parse(pizza_sizes) : [];
-    const arrayIngredients = ingredients ? ingredients.split(',') : [];
-    const arrayExtraIngredients = extra_ingredients ? extra_ingredients.split(',') : [];
-    const arrayNewIngredients = new_ingredients ? new_ingredients.split(',').map((ingredient) => ({ name: ingredient})) : undefined;
-    const arrayNewExtraIngredients = new_extra_ingredients ? new_extra_ingredients.split(',').map((ingredient) => ({ name: ingredient})): undefined;
-    
-    const createdIngredients = arrayNewIngredients ? await Ingredient.create(arrayNewIngredients) : undefined;
-    const createdExtraIngredients = arrayNewExtraIngredients ? await ExtraIngredient.create(arrayNewExtraIngredients) : undefined;
-
-
-    if (createdIngredients) {
-      const newIngredientsIds = createdIngredients.map((ingredient) => ingredient._id);
-      arrayIngredients.push(newIngredientsIds);
-    }
-
-    if (createdExtraIngredients) {
-      const newExtraIngredientsIds = createdExtraIngredients.map((ingredient) => ingredient._id);
-      arrayExtraIngredients.push(newExtraIngredientsIds);
-    }
-
-    const createObj = {
-      name,
-      image_src: req.file ? req.file.path : image_src,
-      category,
-      ...rest,
-    }
-
-    if (ingredients) {
-      createObj.ingredients = arrayIngredients;
-    }
-
-    if (extra_ingredients) {
-      createObj.extra_ingredients = arrayExtraIngredients;
-    }
-
-    if (pizza_sizes) {
-      createObj.pizza_sizes = arrayPizzaSizes;
-    }
+    const createObj = await createProductObj(req.body, req.file);
     
     Product.create(createObj,  (err, product) => {
         if (err) {
@@ -94,57 +45,9 @@ module.exports = {
     );
   },
   updateProduct: async (req, res) => {
-    const {
-      _id,
-      name,
-      image_src,
-      category,
-      ingredients,
-      extra_ingredients,
-      new_ingredients,
-      new_extra_ingredients,
-      pizza_sizes,
-      ...rest
-    } = req.body;
-    const arrayPizzaSizes = pizza_sizes ? JSON.parse(pizza_sizes) : [];
-    const arrayIngredients = ingredients ? ingredients.split(',') : [];
-    const arrayExtraIngredients = extra_ingredients ? extra_ingredients.split(',') : [];
-    const arrayNewIngredients = new_ingredients ? new_ingredients.split(',').map((ingredient) => ({ name: ingredient})) : undefined;
-    const arrayNewExtraIngredients = new_extra_ingredients ? new_extra_ingredients.split(',').map((ingredient) => ({ name: ingredient})): undefined;
+    const { _id } = req.body;
+    const updateObj = await createProductObj(req.body, req.file);
     
-    const createdIngredients = arrayNewIngredients ? await Ingredient.create(arrayNewIngredients) : undefined;
-    const createdExtraIngredients = arrayNewExtraIngredients ? await ExtraIngredient.create(arrayNewExtraIngredients) : undefined;
-
-
-    if (createdIngredients) {
-      const newIngredientsIds = createdIngredients.map((ingredient) => ingredient._id);
-      arrayIngredients.push(newIngredientsIds);
-    }
-
-    if (createdExtraIngredients) {
-      const newExtraIngredientsIds = createdExtraIngredients.map((ingredient) => ingredient._id);
-      arrayExtraIngredients.push(newExtraIngredientsIds);
-    }
- 
-    const updateObj = {
-      name,
-      image_src: req.file ? req.file.path : image_src,
-      category,
-      ...rest,
-    }
-
-    if (ingredients) {
-      updateObj.ingredients = arrayIngredients;
-    }
-
-    if (extra_ingredients) {
-      updateObj.extra_ingredients = arrayExtraIngredients;
-    }
-
-    if (pizza_sizes) {
-      updateObj.pizza_sizes = arrayPizzaSizes;
-    }
-  
     Product.findOneAndUpdate(
       { _id },
       updateObj,
