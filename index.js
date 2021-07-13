@@ -49,7 +49,7 @@ app
   .route("/products")
   .get(productsController.getProducts)
   .post(upload.single("image"), productsController.addProduct)
-  .put(upload.single("image"), productsController.changeProduct);
+  .put(upload.single("image"), productsController.updateProduct);
     // .delete(roleMiddleware([USER_ROLES.ADMIN]), productsController.deleteProduct)
 
 app

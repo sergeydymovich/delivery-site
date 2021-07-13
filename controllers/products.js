@@ -91,7 +91,7 @@ module.exports = {
       }
     );
   },
-  changeProduct: async (req, res) => {
+  updateProduct: async (req, res) => {
     const {
       _id,
       name,
