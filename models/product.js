@@ -7,8 +7,16 @@ const userSchema = new Schema(
     category: { type: Schema.Types.ObjectId, required: true, ref: "Category" },
     is_available: { type: Boolean, default: true },
     image_src: String,
-    ingredients: [{ type: Schema.Types.ObjectId, ref: "Ingredient" }],
-    extra_ingredients: [{ type: Schema.Types.ObjectId, ref: "ExtraIngredient" }],
+    ingredients: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Ingredient',
+      default: undefined,
+    },
+    extra_ingredients: {
+      type: [Schema.Types.ObjectId],
+      ref: 'ExtraIngredient',
+      default: undefined,
+    },
   },
   {
     timestamps: true,

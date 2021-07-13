@@ -1,21 +1,19 @@
 const Product = require("../models/Product.js");
 const Ingredient = require("../models/Ingredient.js");
 const ExtraIngredient = require("../models/ExtraIngredient.js");
-const cfg = require("../config");
 
 module.exports = {
   getProducts: (req, res) => {
-    const { limit, offset, filterWord, category } = req.query;
+    const { limit, offset, filter_word, category } = req.query;
     const findObj = {};
 
-    if (filterWord) {
-       findObj.name = { $regex: filterWord, $options: "i" };
+    if (filter_word) {
+       findObj.name = { $regex: filter_word, $options: "i" };
     }
 
     if (category) {
       findObj.category = category;
     }
-
 
     Product.count(findObj).then((count) =>
     Product.find(findObj)
@@ -28,12 +26,8 @@ module.exports = {
         if (err) {
           res.status(400).json({ message: err.message });
         } else {
-          const updatedProducts = products.map((product) => ({
-            ...product._doc,
-            image_src: product.image_src ? `http://localhost:${cfg.port}/` + product.image_src : '',
-          }));
           res.status(200).json({
-             products: updatedProducts,
+             products,
              products_amount: count,
           });
         }
@@ -42,7 +36,7 @@ module.exports = {
   addProduct: async (req, res) => {
     const {
       name,
-      image,
+      image_src,
       category,
       ingredients,
       extra_ingredients,
@@ -51,7 +45,6 @@ module.exports = {
       pizza_sizes,
       ...rest
     } = req.body;
-    const img = req.file ? req.file.path : image;
     const arrayPizzaSizes = pizza_sizes ? JSON.parse(pizza_sizes) : [];
     const arrayIngredients = ingredients ? ingredients.split(',') : [];
     const arrayExtraIngredients = extra_ingredients ? extra_ingredients.split(',') : [];
@@ -71,15 +64,24 @@ module.exports = {
       const newExtraIngredientsIds = createdExtraIngredients.map((ingredient) => ingredient._id);
       arrayExtraIngredients.push(newExtraIngredientsIds);
     }
- 
+
     const createObj = {
       name,
-      image_src: img,
+      image_src: req.file ? req.file.path : image_src,
       category,
-      ingredients: arrayIngredients,
-      extra_ingredients: arrayExtraIngredients,
-      pizza_sizes:  arrayPizzaSizes,
       ...rest,
+    }
+
+    if (ingredients) {
+      createObj.ingredients = arrayIngredients;
+    }
+
+    if (extra_ingredients) {
+      createObj.extra_ingredients = arrayExtraIngredients;
+    }
+
+    if (pizza_sizes) {
+      createObj.pizza_sizes = arrayPizzaSizes;
     }
     
     Product.create(createObj,  (err, product) => {
@@ -95,7 +97,7 @@ module.exports = {
     const {
       _id,
       name,
-      image,
+      image_src,
       category,
       ingredients,
       extra_ingredients,
@@ -126,21 +128,23 @@ module.exports = {
  
     const updateObj = {
       name,
+      image_src: req.file ? req.file.path : image_src,
       category,
-      ingredients: arrayIngredients,
-      extra_ingredients: arrayExtraIngredients,
-      pizza_sizes:  arrayPizzaSizes,
       ...rest,
     }
 
-    if (req.file) {
-      updateObj.image_src = req.file.path
+    if (ingredients) {
+      updateObj.ingredients = arrayIngredients;
     }
 
-    if (typeof image_src === 'string' && !image_src.length) {
-      updateObj.image_src = '';
+    if (extra_ingredients) {
+      updateObj.extra_ingredients = arrayExtraIngredients;
     }
-    
+
+    if (pizza_sizes) {
+      updateObj.pizza_sizes = arrayPizzaSizes;
+    }
+  
     Product.findOneAndUpdate(
       { _id },
       updateObj,
