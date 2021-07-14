@@ -17,6 +17,18 @@ const userSchema = new Schema(
       ref: 'ExtraIngredient',
       default: undefined,
     },
+    pizzaSizes: {
+      type: [{
+        name: String,
+        size: Number,
+        _id: false,
+        dough: [{
+          name: String,
+          is_available: Boolean,
+        }]
+      }],
+      default: undefined,
+    }
   },
   {
     timestamps: true,

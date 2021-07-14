@@ -15,22 +15,23 @@ module.exports = {
     }
 
     Product.count(findObj).then((count) =>
-    Product.find(findObj)
-      .limit(Number(limit))
-      .skip(Number(offset))
-      .populate("category", "name")
-      .populate("ingredients", "name")
-      .populate("extra_ingredients")
-      .exec((err, products) => {
-        if (err) {
-          res.status(400).json({ message: err.message });
-        } else {
-          res.status(200).json({
-             products,
-             products_amount: count,
-          });
-        }
-      }));
+      Product.find(findObj)
+        .limit(Number(limit))
+        .skip(Number(offset))
+        .populate("category", "name")
+        .populate("ingredients", "name")
+        .populate("extra_ingredients")
+        .exec((err, products) => {
+          if (err) {
+            res.status(400).json({ message: err.message });
+          } else {
+            res.status(200).json({
+              products,
+              products_amount: count,
+            });
+          }
+        })
+      );
   },
   addProduct: async (req, res) => {
     const createObj = await createProductObj(req.body, req.file);

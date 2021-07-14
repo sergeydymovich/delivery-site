@@ -14,21 +14,19 @@ module.exports = {
       pizza_sizes,
       ...rest
     } = reqBody;
-    const arrayIngredients = ('ingredients' in reqBody || 'new_ingredients' in reqBody) &&
-     await createNewDocuments(Ingredient, ingredients, new_ingredients);
-    const arrayExtraIngredients = ('extra_ingredients' in reqBody || 'new_extra_ingredients' in reqBody) &&
-     await createNewDocuments(ExtraIngredient, extra_ingredients, new_extra_ingredients);
- 
+
     const productObj = {
       image_src: reqFile ? reqFile.path : image_src,
       ...rest,
     }
 
-    if (('ingredients' in reqBody || 'new_ingredients' in reqBody)) {
+    if ('ingredients' in reqBody || 'new_ingredients' in reqBody) {
+      const arrayIngredients = await createNewDocuments(Ingredient, ingredients, new_ingredients);
       productObj.ingredients = arrayIngredients;
     }
 
-    if (('extra_ingredients' in reqBody || 'new_extra_ingredients' in reqBody)) {
+    if ('extra_ingredients' in reqBody || 'new_extra_ingredients' in reqBody) {
+      const arrayExtraIngredients = await createNewDocuments(ExtraIngredient, extra_ingredients, new_extra_ingredients);
       productObj.extra_ingredients = arrayExtraIngredients;
     }
 
