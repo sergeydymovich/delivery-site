@@ -17,14 +17,15 @@ const userSchema = new Schema(
       ref: 'ExtraIngredient',
       default: undefined,
     },
-    pizzaSizes: {
+    pizza_sizes: {
       type: [{
+        _id: false,
         name: String,
         size: Number,
-        _id: false,
         dough: [{
           name: String,
-          is_available: Boolean,
+          is_active: Boolean,
+          _id: false,
         }]
       }],
       default: undefined,
